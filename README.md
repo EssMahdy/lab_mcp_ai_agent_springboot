@@ -22,6 +22,9 @@ set +a
 ./gradlew test
 ```
 
+## STEP guides
+- `docs/STEP0-MCP-WRAPPER.md`
+
 ## Notes
 - Real API keys stay in local `.env` only.
 - `.env` is ignored by git.
