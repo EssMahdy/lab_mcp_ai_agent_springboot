@@ -23,13 +23,10 @@ spec:
                 secretKeyRef:
                   name: agent-secrets
                   key: ANTHROPIC_API_KEY
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: agent-secrets
-                  key: GITHUB_TOKEN
             - name: MCP_BASE_URL
-              value: http://github-mcp-server:3333/mcp
+              value: "http://github-mcp-server:3333"
+            - name: MCP_PATH
+              value: "/mcp"
           ports:
             - containerPort: 8080
 ---
