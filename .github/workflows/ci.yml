@@ -35,26 +35,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: PR mode (skip heavy kubernetes)
+        if: github.event_name == 'pull_request'
+        run: echo "kubernetes smoke test runs only on push to main"
+
       - name: Start Minikube
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: medyagh/setup-minikube@master
 
       - name: Verify cluster
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: kubectl get nodes
 
       - name: Build Docker image inside Minikube
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           eval $(minikube -p minikube docker-env)
           docker build -t ai-agent:ci .
 
       - name: Deploy to Minikube
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: kubectl apply -f src/main/k8s/ai-agent-deployment.yml
 
       - name: Wait for pod ready
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           kubectl wait --for=condition=Ready pod -l app=ai-agent --timeout=180s
           kubectl get pods
 
       - name: Test service health endpoint
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: nick-fields/retry@v3
         with:
           timeout_seconds: 25
@@ -67,11 +77,12 @@ jobs:
             kill $PF_PID
 
       - name: Log Kubernetes pods
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           kubectl logs $(kubectl get pods -l app=ai-agent -o name)
 
       - name: Log pods on failure
-        if: failure()
+        if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           kubectl get pods -o wide
           kubectl logs -l app=ai-agent --tail=200
