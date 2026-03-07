@@ -23,6 +23,10 @@ spec:
                 secretKeyRef:
                   name: agent-secrets
                   key: ANTHROPIC_API_KEY
+            - name: GITHUB_OWNER
+              value: "EssMahdy"
+            - name: GITHUB_REPO
+              value: "lab_mcp_ai_agent_springboot"
             - name: MCP_BASE_URL
               value: "http://github-mcp-wrapper:3333"
             - name: MCP_PATH

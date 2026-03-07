@@ -57,3 +57,9 @@ curl http://localhost:8080/api/agent/run \
 ```
 
 Expected: the agent calls Claude, then MCP via wrapper, then creates a GitHub issue.
+
+## Troubleshooting found during validation
+- If `ai-agent` crashes with missing `GITHUB_OWNER`/`GITHUB_REPO`, set both env vars in `k8s/ai-agent.yaml`.
+- If `github-mcp-wrapper` crashes with docker socket error, mount `/var/run/docker.sock` in the wrapper deployment.
+- Delete old `github-mcp-server` resources if still present:
+  `kubectl -n lab-agent delete deploy/github-mcp-server svc/github-mcp-server --ignore-not-found`.
