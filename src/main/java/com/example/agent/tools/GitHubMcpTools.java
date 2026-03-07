@@ -30,12 +30,26 @@ public class GitHubMcpTools implements AgentTool {
             @P("Issue title") String title,
             @P("Issue body in Markdown") String body
     ) {
-        Map result = (Map) mcp.callTool("create_issue", Map.of(
+        Map<String, Object> args = Map.of(
+                "method", "create",
                 "owner", owner,
                 "repo", repo,
                 "title", title,
                 "body", body
-        )).block();
+        );
+
+        Map result;
+        try {
+            result = (Map) mcp.callTool("issue_write", args).block();
+        } catch (RuntimeException e) {
+            // Backward compatibility with wrappers exposing legacy create_issue.
+            result = (Map) mcp.callTool("create_issue", Map.of(
+                    "owner", owner,
+                    "repo", repo,
+                    "title", title,
+                    "body", body
+            )).block();
+        }
 
         return "Issue created successfully: " + result;
     }
