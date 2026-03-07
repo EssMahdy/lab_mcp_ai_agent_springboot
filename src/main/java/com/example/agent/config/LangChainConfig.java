@@ -3,10 +3,12 @@ package com.example.agent.config;
 import com.example.agent.agent.BacklogAgent;
 import com.example.agent.tools.AgentTool;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.time.Duration;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 public class LangChainConfig {
 
     @Bean
+    @Profile("!ci")
     public AnthropicChatModel anthropicChatModel(
             @Value("${anthropic.api-key}") String apiKey,
             @Value("${anthropic.model}") String model,
@@ -30,7 +33,7 @@ public class LangChainConfig {
     }
 
     @Bean
-    public BacklogAgent backlogAgent(AnthropicChatModel model, List<AgentTool> tools) {
+    public BacklogAgent backlogAgent(ChatModel model, List<AgentTool> tools) {
         System.out.println("=== Agent tools loaded: " + tools.size() + " ===");
         tools.forEach(t -> System.out.println(" - " + t.getClass().getName()));
 
