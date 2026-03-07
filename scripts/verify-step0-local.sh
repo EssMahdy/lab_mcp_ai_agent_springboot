@@ -14,10 +14,10 @@ RESPONSE=$(curl -sS http://localhost:3333/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":"1","method":"tools/list","params":{}}')
 
-echo "$RESPONSE" | rg -q 'create_issue' || {
-  echo "ERROR: create_issue not found in tools/list"
+echo "$RESPONSE" | rg -q 'issue_write|create_issue' || {
+  echo "ERROR: issue_write/create_issue not found in tools/list"
   echo "$RESPONSE"
   exit 1
 }
 
-echo "[4/4] OK - create_issue is available"
+echo "[4/4] OK - issue tool is available"

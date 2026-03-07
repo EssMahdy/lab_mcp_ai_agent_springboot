@@ -56,4 +56,4 @@ curl http://localhost:3333/mcp \
   }'
 ```
 
-You should see a tool list containing `create_issue`.
+You should see a tool list containing `issue_write` (or legacy `create_issue`).
